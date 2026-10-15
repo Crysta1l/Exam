@@ -171,7 +171,7 @@ JOIN products_import p ON p.product_name = tmp.product_name;
 
 
 SELECT * FROM materials_products mp 
---- XXX
+--- XXX  
 
 
 
