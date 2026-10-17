@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
+	"html/template"
 	"log"
 	"net/http"
-	"text/template"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -14,8 +14,12 @@ import (
 type Material struct {
 	Id           int
 	MaterialName string
+	MaterialType string
 	Price        float64
 	Amount       float64
+	MinAmount    float64
+	ItemsType    string
+	RequiredCost float64
 }
 
 func main() {
@@ -38,9 +42,25 @@ func main() {
 
 	log.Println("Connection established")
 
-	rows, err := pool.Query(ctx, "SELECT id,material_name,price,amount
-		FROM materials_import WHERE m.material_type_id = t.id" 
-	)
+	rows, err := pool.Query(ctx, `
+		SELECT
+			mi.id,
+			mi.material_name,
+			mt.material_type,
+			mi.price,
+			mi.amount,
+			mi.min_amount,
+			mi.items_type,
+			ROUND(
+				COALESCE(SUM(mp.material_per_unit), 0) * mi.price,
+				2
+			) AS required_cost
+		FROM materials_import mi
+		JOIN material_types mt ON mi.material_type_id  = mt.id 
+		LEFT JOIN materials_products mp ON mp.material_name_id = mi.id
+		GROUP BY mi.id, mt.material_type 
+		ORDER BY mi.id;
+	`)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,8 +75,12 @@ func main() {
 		err := rows.Scan(
 			&material.Id,
 			&material.MaterialName,
+			&material.MaterialType,
 			&material.Price,
 			&material.Amount,
+			&material.MinAmount,
+			&material.ItemsType,
+			&material.RequiredCost,
 		)
 
 		if err != nil {
