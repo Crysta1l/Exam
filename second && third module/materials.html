@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Materials</title>
+</head>
+<body>
+    <h1>Materials</h1>
+    <a href= "/materials/new">Add material</a>
+    {{range .}}
+    <div class="material-card">
+        <div>
+            <h2> {{.MaterialType}} | <a href="/materials/edit?id={{.Id}}">{{.MaterialName}}</a> </h2>
+            <p>Price {{.Price}}</p>
+            <p>MinAmount {{.MinAmount}} {{.ItemsType}}</p>
+            <p>On stash {{.Amount}} {{.ItemsType}}</p>
+        </div>
+            <p>Required cost: {{printf "%.2f" .RequiredCost}}</p>
+    </div>
+    {{end}}
+</body>
+</html>

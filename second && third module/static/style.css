@@ -1,0 +1,26 @@
+body{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: #FFFFFF;
+}
+.material-card{
+    background-color: #F4E6D4;
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+h1 {
+    color: #8A5A44;
+}
+
+
+/*  */
+
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 500px;
+}
