@@ -1,53 +1,33 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="stylesheet" href="/static/style.css">
- <title>Продукция для материала — Арома Дом</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Продукция для материала</title>
 </head>
 <body>
- <main>
-  <h1>Продукция для материала</h1>
-  <h2>{{.Material.MaterialType}} | {{.Material.MaterialName}}</h2>
-  <a class="button secondary" href="/">Назад к материалам</a>
-  <div class="table-scroll">
-   <table>
-    <thead><tr><th>Артикул</th><th>Наименование продукции</th><th>Тип продукции</th><th>Материал на единицу продукции</th></tr></thead>
-    <tbody>
-    {{range .Products}}
-     <tr><td>{{.Article}}</td><td>{{.Name}}</td><td>{{.Type}}</td><td>{{.MaterialAmount}} {{$.Material.ItemsType}}</td></tr>
-    {{else}}
-     <tr><td colspan="4">Этот материал пока не используется в продукции.</td></tr>
-    {{end}}
-    </tbody>
-   </table>
-  </div>
-  <section class="calculator">
-   <h2>Расчёт количества продукции из сырья</h2>
-   <p class="hint">Тип материала: {{.Material.MaterialType}}. Введите целое количество сырья в {{.Material.ItemsType}} и два положительных параметра продукции. Их произведение и коэффициент типа задают расход сырья на одно изделие. Потери сырья учитываются по типу материала.</p>
-   {{if .Error}}<section class="message error" role="alert"><h2>&#9888; Ошибка расчёта</h2><p>{{.Error}}</p></section>{{end}}
-   {{if ne .Result nil}}<section class="message success" role="status"><h2>&#10003; Результат расчёта</h2><p>Количество получаемой продукции: <strong>{{.Result}} шт.</strong></p></section>{{end}}
-   <form method="get" action="/materials/products">
-    <input type="hidden" name="id" value="{{.Material.Id}}">
-    <input type="hidden" name="calculate" value="1">
-    <label>Тип продукции
-     <select name="product_type_id" required>
-      {{range .ProductTypes}}<option value="{{.Id}}" {{if eq (printf "%d" .Id) (index $.Values "product_type_id")}}selected{{end}}>{{.Name}}</option>{{end}}
-     </select>
-    </label>
-    <label>Количество сырья, {{.Material.ItemsType}}
-     <input type="number" name="raw_amount" value="{{index .Values "raw_amount"}}" min="0" step="1" required>
-    </label>
-    <label>Параметр продукции 1
-     <input type="number" name="parameter1" value="{{index .Values "parameter1"}}" min="0.000000001" step="any" required>
-    </label>
-    <label>Параметр продукции 2
-     <input type="number" name="parameter2" value="{{index .Values "parameter2"}}" min="0.000000001" step="any" required>
-    </label>
-    <button type="submit">Рассчитать</button>
-   </form>
-  </section>
- </main>
+    <h1>Продукция для материала</h1>
+    <h2>{{.Material.MaterialName}}</h2>
+    <a href="/">Назад к материалам</a>
+
+    <div class="table-scroll">
+        <table>
+            <tr>
+                <th>Наименование продукции</th>
+                <th>Количество материала на единицу продукции</th>
+            </tr>
+            {{range .Products}}
+            <tr>
+                <td>{{.Name}}</td>
+                <td>{{.MaterialAmount}} {{$.Material.ItemsType}}</td>
+            </tr>
+            {{else}}
+            <tr>
+                <td colspan="2">Этот материал пока не используется в продукции.</td>
+            </tr>
+            {{end}}
+        </table>
+    </div>
 </body>
 </html>

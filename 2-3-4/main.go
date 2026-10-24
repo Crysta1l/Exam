@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -21,9 +20,7 @@ func main() {
 		log.Fatal(err)
 	}
 	defer pool.Close()
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	err = pool.Ping(ctx)
-	cancel()
+	err = pool.Ping(context.Background())
 	if err != nil {
 		log.Fatal("Не удалось подключиться к БД: ", err)
 	}
@@ -47,7 +44,6 @@ func main() {
 	if address == "" {
 		address = "localhost:8080"
 	}
-	server := &http.Server{Addr: address, Handler: mux, ReadHeaderTimeout: 5 * time.Second}
 	log.Printf("Откройте http://%s", address)
-	log.Fatal(server.ListenAndServe())
+	log.Fatal(http.ListenAndServe(address, mux))
 }
