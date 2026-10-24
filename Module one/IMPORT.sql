@@ -171,12 +171,32 @@ JOIN products_import p ON p.product_name = tmp.product_name;
 
 
 SELECT * FROM materials_products mp 
---- XXX  
+--- XXX
+
+
+SELECT id,material_name,price,amount
+FROM materials_import
 
 
 
 
-
+SELECT
+	mi.id,
+	mi.material_name,
+	mt.material_type,
+	mi.price,
+	mi.amount,
+	mi.min_amount,
+	mi.items_type,
+	ROUND(
+		COALESCE(SUM(mp.material_per_unit), 0) * mi.price,
+		2
+	) AS required_cost
+FROM materials_import mi
+JOIN material_types mt ON mi.material_type_id  = mt.id 
+LEFT JOIN materials_products mp ON mp.material_name_id = mi.id
+GROUP BY mi.id, mt.material_type 
+ORDER BY mi.id;
 
 
 

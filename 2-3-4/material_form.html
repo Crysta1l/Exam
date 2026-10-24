@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="/static/style.css">
+ <title>{{if .Material.Id}}Редактирование{{else}}Добавление{{end}} материала — Арома Дом</title>
+</head>
+<body>
+ <main>
+  <h1>{{if .Material.Id}}Редактирование{{else}}Добавление{{end}} материала</h1>
+  {{if .Error}}<section class="message error" role="alert"><h2>&#9888; Ошибка сохранения</h2><p>{{.Error}}</p><p>Исправьте указанные поля и повторно нажмите «Сохранить».</p></section>{{end}}
+  <form method="post" action="/materials/save">
+   <input type="hidden" name="id" value="{{index .Values "id"}}">
+   <label>Наименование
+    <input type="text" name="material_name" value="{{index .Values "material_name"}}" maxlength="100" required>
+   </label>
+   <label>Тип материала
+    <select name="material_type_id" required>
+     <option value="" {{if not .Material.MaterialTypeId}}selected{{end}} disabled>Выберите тип</option>
+     {{range .Types}}
+     <option value="{{.Id}}" {{if eq .Id $.Material.MaterialTypeId}}selected{{end}}>{{.Name}}</option>
+     {{end}}
+    </select>
+   </label>
+   <label>Цена единицы, руб.
+    <input type="number" name="price" value="{{index .Values "price"}}" min="0" max="9999999999.99" step="0.01" required>
+   </label>
+   <label>Единица измерения
+    <input type="text" name="items_type" value="{{index .Values "items_type"}}" maxlength="10" placeholder="кг, л, шт или м" required>
+   </label>
+   <label>Количество в упаковке
+    <input type="number" name="items_per_package" value="{{index .Values "items_per_package"}}" min="0.01" max="9999999999.99" step="0.01" required>
+   </label>
+   <label>Количество на складе
+    <input type="number" name="amount" value="{{index .Values "amount"}}" min="0" max="9999999999.99" step="0.01" required>
+   </label>
+   <label>Минимальное количество
+    <input type="number" name="min_amount" value="{{index .Values "min_amount"}}" min="0" max="9999999999.99" step="0.01" required>
+   </label>
+   <div class="actions">
+    <button type="submit">Сохранить</button>
+    <a class="button secondary" href="/">Назад без сохранения</a>
+   </div>
+  </form>
+ </main>
+</body>
+</html>

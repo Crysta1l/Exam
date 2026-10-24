@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="/static/style.css">
+ <title>Материалы — Арома Дом</title>
+</head>
+<body>
+ <main>
+  <h1>Материалы</h1>
+  {{if .Saved}}<section class="message success" role="status"><h2>&#10003; Информация</h2><p>Материал сохранён. Список обновлён.</p></section>{{end}}
+  <nav class="actions"><a class="button" href="/materials/new">Добавить материал</a></nav>
+  {{range .Materials}}
+  <article class="material-card">
+   <div>
+    <h2>{{.MaterialType}} | <a href="/materials/edit?id={{.Id}}">{{.MaterialName}}</a></h2>
+    <p>Минимальное количество: {{.MinAmount}} {{.ItemsType}}</p>
+    <p>Количество на складе: {{.Amount}} {{.ItemsType}}</p>
+    <p>Цена: {{printf "%.2f" .Price}} руб. / Единица измерения: {{.ItemsType}}</p>
+    <a class="button secondary" href="/materials/products?id={{.Id}}">Продукция</a>
+   </div>
+   <p class="required">Требуемое количество:<br><strong>{{printf "%.2f" .RequiredAmount}} {{.ItemsType}}</strong></p>
+  </article>
+  {{else}}<p>Материалов пока нет. Нажмите «Добавить материал».</p>{{end}}
+ </main>
+</body>
+</html>
